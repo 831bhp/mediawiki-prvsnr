@@ -1,0 +1,5 @@
+base:
+  '*':
+    - install
+    - mysql
+    - config
