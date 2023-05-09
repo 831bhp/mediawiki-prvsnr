@@ -25,8 +25,7 @@ function usage {
             --subscription-id <Your Azure account subscription ID>
            }
     Command Args:
-        --client-id <client-id> --client-secret <> --tenant-id <> --subscription-id <>
-    "
+        --client-id {client-id} --client-secret {client-secret} --tenant-id {tenant-secret} --subscription-id {subscription-id}"
 }
 
 function die {
@@ -49,7 +48,7 @@ while [[ $# -gt 0 ]]; do
             client_secret="$2"
             shift 2
         ;;
-        --tenant-id
+        --tenant-id)
             [ -z "$2" ] && die "Error: Tenant ID not provided";
             tenant_id="$2"
             shift 2
@@ -65,19 +64,26 @@ done
 
 # Install terraform
 if [[ -f "/etc/os-release" ]]; then
-  echo "Installing Terraform on Ubuntu" | tee -a ${LOG_FILE}
-  wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg | tee -a ${LOG_FILE}
-  echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list | tee -a ${LOG_FILE}
-  sudo apt update && sudo apt install terraform | tee -a ${LOG_FILE}
+  echo -e "****** Installing Terraform on Ubuntu ******\n" | sudo tee -a ${LOG_FILE}
+  wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg | sudo tee -a ${LOG_FILE}
+  echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list | sudo tee -a ${LOG_FILE}
+  sudo apt update && sudo apt install terraform | sudo tee -a ${LOG_FILE}
 else
   die "OS is not Ubuntu, please run the script on Ubuntu"
 fi
 
 # Run terraform to provision resources on Azure
-echo "Running terraform to provision Azure resources"
-terraform init | tee -a ${LOG_FILE}
-terraform plan | tee -a ${LOG_FILE}
+echo -e "\n****** Running terraform to provision Azure resources ******" | sudo tee -a ${LOG_FILE}
+cd /opt/mediawiki-prvsnr/terraform
+
+echo -e "\n****** Running terraform init ******" | sudo tee -a ${LOG_FILE}
+sudo terraform init | sudo tee -a ${LOG_FILE}
+
+echo -e "\n****** Running terraform plan ******" | sudo tee -a ${LOG_FILE}
+sudo terraform plan | sudo tee -a ${LOG_FILE}
 echo "Do you want to proceed? (y/n):"
 read proceed
 if [[ $proceed == "n" ]]; then exit 0; fi
-terraform apply -var client_id="$client_id" -var client_secret="$client_secret" -var tenant_id="$tenant_id" -var subscription_id="$subscription_id" | tee -a ${LOG_FILE}
+
+echo -e "\n****** Running terraform apply ******" | sudo tee -a ${LOG_FILE}
+sudo terraform apply -var client_id="$client_id" -var client_secret="$client_secret" -var tenant_id="$tenant_id" -var subscription_id="$subscription_id" | sudo tee -a ${LOG_FILE}

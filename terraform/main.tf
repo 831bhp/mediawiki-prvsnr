@@ -1,8 +1,3 @@
-variable client_id {}
-variable client_secret {}
-variable tenant_id {}
-variable subscription_id {}
-
 terraform {
   required_providers {
     azurerm = {
@@ -54,6 +49,16 @@ resource "azurerm_network_interface" "mediawiki_nic" {
   }
 }
 
+resource "tls_private_key" "linux_key" {
+  algorithm = "RSA"
+  rsa_bits = 4096
+}
+
+resource "local_file" "linux_key" {
+  filename = "linuxkey.pem"
+  content = tls_private_key.linux_key.private_key_pem
+}
+
 resource "azurerm_linux_virtual_machine" "mediawiki_vm" {
   name                            = "${var.prefix}-vm"
   resource_group_name             = azurerm_resource_group.mediawiki_rg.name
@@ -66,7 +71,14 @@ resource "azurerm_linux_virtual_machine" "mediawiki_vm" {
 
   admin_ssh_key {
     username = var.user
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = tls_private_key.linux_key.public_key_openssh
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "${var.user}"
+    private_key = tls_private_key.linux_key.private_key_pem
+    host        = "${self.public_ip_address}"
   }
 
   source_image_reference {

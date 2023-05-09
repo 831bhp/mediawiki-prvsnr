@@ -5,7 +5,7 @@ variable "prefix" {
 
 variable "location" {
   description = "The Azure Region in which all resources in this example should be created."
-  default = "ind-central"
+  default = "centralindia"
 }
 
 variable "vm_size" {
@@ -21,22 +21,22 @@ variable "storage_account_type" {
   default = "Standard_LRS"
 }
 
-variable "client_id" {
-  description = "Client ID, need to provide as part of main script"
-}
-
 variable "user" {
   default = "adminuser"
 }
 
-variable "client_secret" {
-  description = "Client secret, need to provide as part of main script"
-}
-
 variable "tenant_id" {
-  description = "Tenant ID, need to provide as part of main script"
+
 }
 
 variable "subscription_id" {
-  description = "Subscription ID, need to provide as part of main script"
+
+}
+
+variable "client_id" {
+
+}
+
+variable "client_secret" {
+
 }
