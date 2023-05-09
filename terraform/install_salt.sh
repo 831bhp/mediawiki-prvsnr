@@ -12,6 +12,6 @@ cp /etc/salt/minion /etc/salt/minion.bak
 
 sudo apt update && sudo apt install git
 
-cd /opt && git clone https://github.com/831bhp/mediawiki-prvsnr.git
+cd /opt && sudo git clone -b dev https://github.com/831bhp/mediawiki-prvsnr.git
 cp mediawiki-prvsnr/salt/files/minion /etc/salt/minion
 
