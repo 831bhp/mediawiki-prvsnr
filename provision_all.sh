@@ -37,7 +37,7 @@ function die {
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -h|--help) die "Invalid parameter provided"
+        -h|--help) die "Please check usage"
         ;;
         --client-id)
             [ -z "$2" ] && die "Error: Client ID not provided";
