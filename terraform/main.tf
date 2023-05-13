@@ -37,6 +37,13 @@ resource "azurerm_subnet" "internal" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
+resource "azurerm_public_ip" "mediawiki_public_ip" {
+  name                = "${var.prefix}-public-ip"
+  location            = azurerm_resource_group.mediawiki_rg.location
+  resource_group_name = azurerm_resource_group.mediawiki_rg.name
+  allocation_method   = "Dynamic"
+}
+
 resource "azurerm_network_interface" "mediawiki_nic" {
   name                = "${var.prefix}-nic"
   resource_group_name = azurerm_resource_group.mediawiki_rg.name
@@ -46,7 +53,11 @@ resource "azurerm_network_interface" "mediawiki_nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.mediawiki_public_ip.id
   }
+  depends_on = [
+    azurerm_public_ip.mediawiki_public_ip
+  ]
 }
 
 resource "tls_private_key" "linux_key" {
@@ -57,6 +68,7 @@ resource "tls_private_key" "linux_key" {
 resource "local_file" "linux_key" {
   filename = "linuxkey.pem"
   content = tls_private_key.linux_key.private_key_pem
+  file_permission = "400"
 }
 
 resource "azurerm_linux_virtual_machine" "mediawiki_vm" {
@@ -74,12 +86,6 @@ resource "azurerm_linux_virtual_machine" "mediawiki_vm" {
     public_key = tls_private_key.linux_key.public_key_openssh
   }
 
-  connection {
-    type        = "ssh"
-    user        = "${var.user}"
-    private_key = tls_private_key.linux_key.private_key_pem
-    host        = "${self.public_ip_address}"
-  }
 
   source_image_reference {
     publisher = "Canonical"
@@ -91,6 +97,13 @@ resource "azurerm_linux_virtual_machine" "mediawiki_vm" {
   os_disk {
     storage_account_type = var.storage_account_type
     caching              = "ReadWrite"
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "${var.user}"
+    private_key = file(local_file.linux_key.filename)
+    host        = self.public_ip_address
   }
 
   provisioner "file" {
