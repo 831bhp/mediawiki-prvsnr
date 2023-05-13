@@ -64,17 +64,19 @@ done
 
 # Install terraform
 if [[ -f "/etc/os-release" ]]; then
-  echo -e "****** Installing Terraform on Ubuntu ******\n" | sudo tee -a ${LOG_FILE}
-  wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg | sudo tee -a ${LOG_FILE}
-  echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list | sudo tee -a ${LOG_FILE}
-  sudo apt update && sudo apt install terraform | sudo tee -a ${LOG_FILE}
+  if [[ ! `command -v terraform` ]];then
+    echo -e "****** Installing Terraform on Ubuntu ******\n" | sudo tee -a ${LOG_FILE}
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg | sudo tee -a ${LOG_FILE}
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list | sudo tee -a ${LOG_FILE}
+    sudo apt update && sudo apt install terraform | sudo tee -a ${LOG_FILE}
+  fi
 else
   die "OS is not Ubuntu, please run the script on Ubuntu"
 fi
 
 # Run terraform to provision resources on Azure
 echo -e "\n****** Running terraform to provision Azure resources ******" | sudo tee -a ${LOG_FILE}
-cd /opt/mediawiki-prvsnr/terraform
+cd ./terraform
 
 echo -e "\n****** Running terraform init ******" | sudo tee -a ${LOG_FILE}
 sudo terraform init | sudo tee -a ${LOG_FILE}
