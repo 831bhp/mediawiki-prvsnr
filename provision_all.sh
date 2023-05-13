@@ -82,10 +82,10 @@ echo -e "\n****** Running terraform init ******" | sudo tee -a ${LOG_FILE}
 sudo terraform init | sudo tee -a ${LOG_FILE}
 
 echo -e "\n****** Running terraform plan ******" | sudo tee -a ${LOG_FILE}
-sudo terraform plan | sudo tee -a ${LOG_FILE}
+sudo terraform plan -out main.tfplan -var client_id="$client_id" -var client_secret="$client_secret" -var tenant_id="$tenant_id" -var subscription_id="$sub_id" | sudo tee -a ${LOG_FILE}
 echo "Do you want to proceed? (y/n):"
 read proceed
 if [[ $proceed == "n" ]]; then exit 0; fi
 
 echo -e "\n****** Running terraform apply ******" | sudo tee -a ${LOG_FILE}
-sudo terraform apply -var client_id="$client_id" -var client_secret="$client_secret" -var tenant_id="$tenant_id" -var subscription_id="$subscription_id" | sudo tee -a ${LOG_FILE}
+sudo terraform apply main.tfplan -var client_id="$client_id" -var client_secret="$client_secret" -var tenant_id="$tenant_id" -var subscription_id="$sub_id" | sudo tee -a ${LOG_FILE}
