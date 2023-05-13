@@ -88,4 +88,4 @@ read proceed
 if [[ $proceed == "n" ]]; then exit 0; fi
 
 echo -e "\n****** Running terraform apply ******" | sudo tee -a ${LOG_FILE}
-sudo terraform apply main.tfplan -var client_id="$client_id" -var client_secret="$client_secret" -var tenant_id="$tenant_id" -var subscription_id="$sub_id" | sudo tee -a ${LOG_FILE}
+sudo terraform apply main.tfplan | sudo tee -a ${LOG_FILE}
