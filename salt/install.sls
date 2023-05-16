@@ -3,7 +3,8 @@ Install Pkgs:
     - pkgs:
       - apache2
       - mariadb-server
-      - php php-mysql
+      - php
+      - php-mysql
       - libapache2-mod-php
       - php-xml
       - php-mbstring
@@ -20,11 +21,19 @@ Install Opt Pkgs:
       - php-curl
       - php-bcmath
 
+Install Pkgs for Salt SQL module:
+  pkg.installed:
+    - pkgs:
+      - build-essential
+      - python3-dev
+      - libmysqlclient-dev
+      - python3-pip
+
 Get Mediawiki tarball:
   cmd.run:
-    name: |
-      mkdir -p /tmp/mediawiki  
-      wget -O /tmp/mediawiki/mediawiki-1.39.3.tar.gz https://releases.wikimedia.org/mediawiki/1.39/mediawiki-1.39.3.tar.gz   
-      tar -xvzf /tmp/mediawiki-*.tar.gz -C /tmp/mediawiki  
-      sudo mkdir /var/lib/mediawiki  
-      sudo mv /tmp/mediawiki/mediawiki-*/* /var/lib/mediawiki  
+    - name: |
+        sudo mkdir -p /tmp/mediawiki
+        sudo wget -O /tmp/mediawiki/mediawiki-1.39.3.tar.gz https://releases.wikimedia.org/mediawiki/1.39/mediawiki-1.39.3.tar.gz
+        sudo tar -xvzf /tmp/mediawiki-*.tar.gz -C /tmp/mediawiki
+        sudo mkdir /var/lib/mediawiki
+        sudo mv /tmp/mediawiki/mediawiki-*/* /var/lib/mediawiki

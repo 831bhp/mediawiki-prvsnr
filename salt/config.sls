@@ -1,8 +1,14 @@
-Restart the apache service:
+# Restart the apache service
+
+Stop apache service:
   service.dead:
     - name: apache2
+
+Start apache service:
   service.running:
     - name: apache2
+
+Enable apache service:
   service.enabled:
     - name: apache2
 
@@ -27,7 +33,7 @@ Grant my_wiki:
 Configure MediaWiki:
   cmd.run:
     - name: |
-      sudo ln -s /var/lib/mediawiki /var/www/html/mediawiki  
-      sudo phpenmod mbstring
-      sudo phpenmod xml
-      sudo systemctl restart apache2.service  # todo: write separate state for restarting apache2 
+        sudo ln -s /var/lib/mediawiki /var/www/html/mediawiki
+        sudo phpenmod mbstring
+        sudo phpenmod xml
+        sudo systemctl restart apache2.service  # todo: write separate state for restarting apache2
