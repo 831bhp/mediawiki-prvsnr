@@ -38,18 +38,19 @@ resource "azurerm_subnet" "internal" {
 }
 
 resource "azurerm_network_security_group" "mediawiki_nsg" {
-  name                = "${var.prefix}-nsg"
+  name                = "${var.prefix}-nsg-${count.index}"
   location            = azurerm_resource_group.mediawiki_rg.location
   resource_group_name = azurerm_resource_group.mediawiki_rg.name
+  count               = length(var.inbount_ports)
 
   security_rule {
-    name                       = "allowInbound"
-    priority                   = 100
+    name                       = "allowInbound-${count.index}"
+    priority                   = 100 + ${count.index}
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "8080,80,443,22"
+    destination_port_range     = "${var.inbound_ports[count.index]}"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
