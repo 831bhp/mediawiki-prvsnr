@@ -3,11 +3,15 @@ Install Pkgs:
     - pkgs:
       - apache2
       - mariadb-server
-      - php
-      - php-mysql
+      - php7.4
+      - php7.4-mysql
       - libapache2-mod-php
-      - php-xml
-      - php-mbstring
+      - php7.4-xml
+      - php7.4-mbstring
+
+Enable apache service:
+  service.enabled:
+    - name: apache2
 
 Install Opt Pkgs:
   pkg.installed:
@@ -17,17 +21,17 @@ Install Opt Pkgs:
       - imagemagick
       - inkscape
       - php-gd
-      - php-cli
-      - php-curl
-      - php-bcmath
+      - php7.4-cli
+      - php7.4-curl
+      - php7.4-bcmath
 
-Install Pkgs for Salt SQL module:
-  pkg.installed:
-    - pkgs:
-      - build-essential
-      - python3-dev
-      - libmysqlclient-dev
-      - python3-pip
+#Install Pkgs for Salt SQL module:
+#  pkg.installed:
+#    - pkgs:
+#      - build-essential
+#      - python3-dev
+#      - libmysqlclient-dev
+#      - python3-pip
 
 Get Mediawiki tarball:
   cmd.run:

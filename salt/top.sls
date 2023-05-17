@@ -1,5 +1,6 @@
 base:
-  '*':
+  'mediawiki-vm*':
     - install
     - mysql
-    - config
+    - config_mediawiki
+

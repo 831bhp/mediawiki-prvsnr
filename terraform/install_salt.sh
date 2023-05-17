@@ -19,3 +19,9 @@ sudo apt update && sudo apt install git
 
 cd /opt && sudo git clone -b dev https://github.com/831bhp/mediawiki-prvsnr.git
 sudo cp /opt/mediawiki-prvsnr/salt/files/minion /etc/salt/minion
+sudo salt-call --local test.ping
+
+# Add repo to install php7.4
+sudo apt -y install software-properties-common
+sudo add-apt-repository -y ppa:ondrej/php
+sudo apt-get update
