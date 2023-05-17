@@ -1,4 +1,3 @@
-
 #Create Mysql database:
 #  mysql_database.present:
 #    - name: {{ pillar['mysql']['db'] }}
@@ -20,7 +19,8 @@
 Configure Mysql db:
   cmd.run:
     - name: |
-      sudo mysql -u root -p"" -e "CREATE DATABASE my_wiki"
-      sudo mysql -u root -p"" -e "use my_wiki"
-      sudo mysql -u root -p"" -e "CREATE USER 'new_mysql_user'@'localhost' IDENTIFIED BY 'THISpasswordSHOULDbeCHANGED';"
-      sudo mysql -u root -p"" -e "GRANT ALL PRIVILEGES ON my_wiki.* TO 'new_mysql_user'@'localhost' WITH GRANT OPTION;"
+        set -eE
+        sudo mysql -u root -e "CREATE DATABASE my_wiki"
+        sudo mysql -u root -e "use my_wiki"
+        sudo mysql -u root -e "CREATE USER 'new_mysql_user'@'localhost' IDENTIFIED BY 'THISpasswordSHOULDbeCHANGED';"
+        sudo mysql -u root -e "GRANT ALL PRIVILEGES ON my_wiki.* TO 'new_mysql_user'@'localhost' WITH GRANT OPTION;"

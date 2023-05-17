@@ -25,10 +25,6 @@ variable "user" {
   default = "adminuser"
 }
 
-variable "inbound_ports" {
-  default = [ 8080, 80, 443, 22 ]
-}
-
 variable "tenant_id" {
 
 }

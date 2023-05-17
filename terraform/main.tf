@@ -38,22 +38,44 @@ resource "azurerm_subnet" "internal" {
 }
 
 resource "azurerm_network_security_group" "mediawiki_nsg" {
-  name                = "${var.prefix}-nsg-${count.index}"
+  name                = "${var.prefix}-nsg"
   location            = azurerm_resource_group.mediawiki_rg.location
   resource_group_name = azurerm_resource_group.mediawiki_rg.name
-  count               = length(var.inbount_ports)
 
   security_rule {
-    name                       = "allowInbound-${count.index}"
-    priority                   = 100 + ${count.index}
+    name                       = "allowInbound-8080"
+    priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "${var.inbound_ports[count.index]}"
+    destination_port_range     = "8080"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  security_rule {
+    name                       = "allowInbound-80"
+    priority                   = 101
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "allowInbound-22"
+    priority                   = 102
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
 }
 
 resource "azurerm_subnet_network_security_group_association" "mediawiki_nsg-associate" {
