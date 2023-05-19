@@ -2,6 +2,20 @@
 ## Automate the deployment of MediaWiki  
 - This provisioner provisions the Mediawiki using the steps mentioned [here](https://www.mediawiki.org/wiki/Manual:Running_MediaWiki_on_Debian_or_Ubuntu).  
 
+# High level architecture  
+This repository uses Terraform to provision the VM on the Azure cloud. The Mediawiki is then provisioned using Saltstack.    
+Using terraforms's remote_exec feature it runs the shell script to install and configure Saltstack on the provisioned VM, Salt is installed with single node configuration (salt-call)  
+
+Reason for using Salt:  
+Salt can be used to do the SCM of the Mediawiki packages, the packages can be easily updated using salt formulae. 
+For the failover, the setup can be done on multiple VMs, segregating the database and using the load balancer, managing nodes and the packages in that case will be much more easier with help of Salt.   
+
+## Sample deployment  
+
+![mediawiki-rg](https://github.com/831bhp/mediawiki-prvsnr/assets/99785311/d4cd89d7-083d-48a2-a1b1-a9f2d725e738)
+
+
+# Steps to install  
 ## Prerequisites  
 1. Azure subscription (Currently only Azure is supported)  
 2. Azure object Identity already created with following details:  
@@ -11,11 +25,6 @@
    - Subscription ID  
 3. Linux VM (Ubuntu 18.04), it will be provisioned automatically.  
 
-## Sample deployment  
-
-![mediawiki-rg](https://github.com/831bhp/mediawiki-prvsnr/assets/99785311/d4cd89d7-083d-48a2-a1b1-a9f2d725e738)
-
-# Steps to install  
 1. Clone the repo:  
    ```
    git clone https://github.com/831bhp/mediawiki-prvsnr.git  
