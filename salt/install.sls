@@ -4,7 +4,7 @@ Install Pkgs:
       - apache2
       - mariadb-server
       - php7.4
-      - php7.4-mysql
+      - php-mysql
       - libapache2-mod-php
       - php-xml
       - php-mbstring
@@ -21,6 +21,7 @@ Install Opt Pkgs:
       - imagemagick
       - inkscape
       - php-gd
+      - php7.4-mysql
       - php7.4-cli
       - php7.4-curl
       - php7.4-bcmath

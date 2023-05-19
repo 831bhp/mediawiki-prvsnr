@@ -26,4 +26,4 @@ sudo salt-call --local test.ping
 sudo apt -y install software-properties-common
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
-sudo salt-call --local test.highstate
+sudo salt-call --local state.highstate
